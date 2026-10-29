@@ -1,0 +1,9 @@
+#!/bin/sh
+# "Editor" do painel do superfile: abre o arquivo no nvim numa aba nova do
+# kitty (o painel tem só ~60 colunas). Fechar o nvim fecha a aba.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:/Applications/kitty.app/Contents/MacOS:$PATH"
+# o cmd+e roda este script com --allow-remote-control (KITTY_LISTEN_ON=fd:N)
+[ -z "$KITTY_LISTEN_ON" ] && [ -n "$KITTY_PID" ] && export KITTY_LISTEN_ON="unix:/tmp/kitty-$KITTY_PID"
+
+kitten @ launch --type=tab --tab-title "$(basename "$1")" --cwd="$(dirname "$1")" \
+  --env "PATH=$PATH" nvim "$1" >/dev/null
